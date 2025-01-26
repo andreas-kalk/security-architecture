@@ -1,2 +1,21 @@
 services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
+    container_name: sec-keycloak
+    hostname: keycloak
+    command: start-dev --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false
+    restart: "no"
+    ports:
+      - 8092:8080
+    environment:
+      TZ: Europe/Berlin
+      KC_PROXY_HEADERS: forwarded
+      KC_HTTPS_PORT: 8092
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB_URL: jdbc:h2:file:~/data/h2/keycloakdb;AUTO_SERVER=TRUE;NON_KEYWORDS=VALUE
+      KC_FEATURES: transient-users
 
+networks:
+  default:
+    name: security
