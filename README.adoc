@@ -1,1 +1,17 @@
 = Security architecture
+
+== Resource Server
+
+== React SPA
+
+== Spring Cloud API Gateway
+
+== Eureka Discovery Service
+
+== Keycloak Identity Provider
+
+== OpenFGA Connector
+
+== AuthZed Connector
+
+== Open policy agent Connector

@@ -1,0 +1,8 @@
+= Resource Server
+
+== User related endpoints
+* GET /user/me
+
+== Product related endpoints
+* GET /products
+* GET /products/+{product_id}+

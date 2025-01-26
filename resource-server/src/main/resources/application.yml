@@ -1,0 +1,9 @@
+spring:
+  docker:
+    compose:
+      enabled: false
+      file: compose.yml
+  application:
+    name: Resource Server
+server:
+  port: 8090
