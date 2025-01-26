@@ -1,0 +1,9 @@
+spring:
+    docker:
+        compose:
+            enabled: false
+            file: compose.yml
+    application:
+        name: API-Gateway
+server:
+    port: 8095
