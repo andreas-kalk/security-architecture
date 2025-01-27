@@ -31,6 +31,20 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  gateway:
+    build:
+      context: .
+      dockerfile: ./gateway/Dockerfile
+    image: security-gateway:${PROJECT_VERSION}
+    container_name: sec-gateway
+    hostname: gateway
+    ports:
+      - 8095:8095
+    depends_on:
+      - resource-server
+    environment:
+      RESOURCE_SERVER_URL: http://resource-server:8090
+
   resource-server:
     build:
       context: .

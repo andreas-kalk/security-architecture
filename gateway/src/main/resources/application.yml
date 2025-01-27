@@ -1,9 +1,21 @@
 spring:
-    docker:
-        compose:
-            enabled: false
-            file: compose.yml
-    application:
-        name: API-Gateway
+  security:
+    user:
+      password: user
+  cloud:
+    gateway:
+        routes:
+            - id: resource-server
+              uri: ${RESOURCE_SERVER_URL:http://localhost:8090}
+              predicates:
+                - Path=/api/**
+              filters:
+                - StripPrefix=1
+  docker:
+      compose:
+          enabled: false
+          file: compose.yml
+  application:
+      name: API-Gateway
 server:
     port: 8095
