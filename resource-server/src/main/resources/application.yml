@@ -16,7 +16,7 @@ spring:
   data:
     mongodb:
       database: testdb
-      uri: mongodb://user:test@localhost:27017
+      uri: ${DATABASE_URL:mongodb://user:test@localhost:27017}
 server:
   port: 8090
 logging:

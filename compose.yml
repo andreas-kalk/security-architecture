@@ -5,67 +5,95 @@ services:
     hostname: keycloak
     command: start-dev -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/tmp/import -Dkeycloak.migration.strategy=OVERWRITE_EXISTING --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false
     restart: no
+    networks:
+      - security
     ports:
       - 8092:8080
     volumes:
       - keycloak_data:/opt/jboss/keycloak/standalone/data
       - ./keycloak/configuration:/tmp/import
+      - ./keycloak/configuration/healthcheck.sh:/opt/keycloak/bin/healthcheck.sh
     environment:
       TZ: Europe/Berlin
-      KC_PROXY_HEADERS: forwarded
-      KC_HTTPS_PORT: 8092
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_DB_URL: jdbc:h2:file:~/data/h2/keycloakdb;AUTO_SERVER=TRUE;NON_KEYWORDS=VALUE
       KC_FEATURES: transient-users
+      KC_HEALTH_ENABLED: true
+    healthcheck:
+      test: /opt/keycloak/bin/healthcheck.sh || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mongodb:
     image: mongo:latest
     container_name: sec_mongodb
     hostname: mongodb
+    restart: no
     environment:
       MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ADMIN}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ADMIN_PASSWORD}
+    networks:
+      - security
     ports:
       - 27017:27017
     volumes:
       - mongodb_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   gateway:
     build:
       context: .
       dockerfile: ./gateway/Dockerfile
     image: security-gateway:${PROJECT_VERSION}
+    restart: no
     container_name: sec-gateway
     hostname: gateway
+    networks:
+      - security
     ports:
       - 8095:8095
     depends_on:
-      - resource-server
+      keycloak:
+        condition: service_healthy
+      resource-server:
+        condition: service_started
     environment:
       RESOURCE_SERVER_URL: ${RESOURCE_SERVER_URL}
-      KEYCLOAK_URL: ${KEYCLOAK_URL}
+      KEYCLOAK_URL: http://keycloak:8080
 
   resource-server:
     build:
       context: .
       dockerfile: ./resource-server/Dockerfile
     image: security-resource-server:${PROJECT_VERSION}
+    restart: no
     container_name: sec-resource-server
     hostname: resource-server
+    networks:
+      - security
     ports:
       - 8090:8090
     depends_on:
-      - mongodb
-      - keycloak
+      mongodb:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
     environment:
       KEYCLOAK_URL: ${KEYCLOAK_URL}
+      DATABASE_URL: ${DATABASE_URL}
 
   mysql:
     profiles:
       - openfga
     image: mysql:8
+    restart: no
     container_name: sec-openfga-mysql
     hostname: mysql
     ports:
@@ -87,6 +115,7 @@ services:
       mysql:
         condition: service_healthy
     image: openfga/openfga:latest
+    restart: no
     container_name: sec-openfga-migrate
     command: migrate
     environment:
@@ -102,6 +131,7 @@ services:
       migrate:
         condition: service_completed_successfully
     image: openfga/openfga:latest
+    restart: no
     container_name: sec-openfga
     hostname: openfga
     environment:
@@ -125,7 +155,5 @@ volumes:
   keycloak_data:
 
 networks:
-  openfga:
   security:
-  default:
-    name: security
+  openfga:
