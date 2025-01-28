@@ -13,11 +13,18 @@ public class ProductService {
 
     private final ProductRepo repo;
 
-    public ProductService(ProductRepo repo) {
+    private final ProductGroupService groupService;
+
+    public ProductService(ProductRepo repo, ProductGroupService groupService) {
         this.repo = repo;
+        this.groupService = groupService;
     }
 
     public Product save(Product product) {
+        if (product.getProductGroup() == null) {
+            product.setProductGroup(groupService.getRoot());
+        }
+
         return repo.save(product);
     }
 

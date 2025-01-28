@@ -3,12 +3,11 @@ package com.kalk.security.server.entity;
 import java.util.UUID;
 
 import jakarta.persistence.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
-public class Product extends Auditable {
+public class ProductGroup extends Auditable {
 
     @Id
     private UUID id;
@@ -16,17 +15,11 @@ public class Product extends Auditable {
     @Field("name")
     private String name;
 
-    @DBRef
-    private ProductGroup productGroup;
-
-    @Override
-    public void setId(UUID id) {
-        this.id = id;
+    public ProductGroup() {
     }
 
-    @Override
-    public UUID getId() {
-        return id;
+    public ProductGroup(String name) {
+        this.name = name;
     }
 
     public String getName() {
@@ -37,11 +30,13 @@ public class Product extends Auditable {
         this.name = name;
     }
 
-    public ProductGroup getProductGroup() {
-        return productGroup;
+    @Override
+    public void setId(UUID id) {
+        this.id = id;
     }
 
-    public void setProductGroup(ProductGroup productGroup) {
-        this.productGroup = productGroup;
+    @Override
+    public UUID getId() {
+        return id;
     }
 }
