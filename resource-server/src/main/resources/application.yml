@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: openfga
   security:
     oauth2:
       resource server:
