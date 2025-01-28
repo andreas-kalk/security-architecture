@@ -3,18 +3,19 @@ services:
     image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
     container_name: sec-keycloak
     hostname: keycloak
-    command: start-dev --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false
+    command: start-dev -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/tmp/import -Dkeycloak.migration.strategy=OVERWRITE_EXISTING --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false
     restart: no
     ports:
       - 8092:8080
     volumes:
       - keycloak_data:/opt/jboss/keycloak/standalone/data
+      - ./keycloak/configuration:/tmp/import
     environment:
       TZ: Europe/Berlin
       KC_PROXY_HEADERS: forwarded
       KC_HTTPS_PORT: 8092
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_DB_URL: jdbc:h2:file:~/data/h2/keycloakdb;AUTO_SERVER=TRUE;NON_KEYWORDS=VALUE
       KC_FEATURES: transient-users
 
@@ -31,6 +32,21 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  gateway:
+    build:
+      context: .
+      dockerfile: ./gateway/Dockerfile
+    image: security-gateway:${PROJECT_VERSION}
+    container_name: sec-gateway
+    hostname: gateway
+    ports:
+      - 8095:8095
+    depends_on:
+      - resource-server
+    environment:
+      RESOURCE_SERVER_URL: ${RESOURCE_SERVER_URL}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+
   resource-server:
     build:
       context: .
@@ -44,7 +60,7 @@ services:
       - mongodb
       - keycloak
     environment:
-      KEYCLOAK_URL: http://keycloak:8092
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
 
 volumes:
   mongodb_data:
