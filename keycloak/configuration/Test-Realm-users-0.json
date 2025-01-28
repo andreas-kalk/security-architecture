@@ -1,0 +1,67 @@
+{
+  "realm" : "Test-Realm",
+  "users" : [ {
+    "id" : "14e4ed05-8d9d-475e-a9d4-3e445ef7485f",
+    "username" : "service-account-test-client",
+    "emailVerified" : false,
+    "createdTimestamp" : 1737985557522,
+    "enabled" : true,
+    "totp" : false,
+    "serviceAccountClientId" : "test-client",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-test-realm" ],
+    "clientRoles" : {
+      "test-client" : [ "uma_protection" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "df6cacb4-dff6-4327-97d2-7c89ba6420b0",
+    "username" : "user_a",
+    "firstName" : "User",
+    "lastName" : "A",
+    "email" : "user_a@test-client.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1737985654032,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "3ca3a69c-fad5-47ea-9969-df626afeeac2",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1737985664514,
+      "secretData" : "{\"value\":\"v26dQBU34Z4d9gNeFdl1e7+xR2ZPxKrdiobEGh9+U5o=\",\"salt\":\"0PsDZbguEkiL14+NCkH+Cg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-test-realm" ],
+    "notBefore" : 0,
+    "groups" : [ "/Product_Manager" ]
+  }, {
+    "id" : "57e9704f-c91b-4ccc-833c-722989a72bce",
+    "username" : "user_ro",
+    "firstName" : "User",
+    "lastName" : "ReadOnly",
+    "email" : "user_ro@test-client.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1737994001585,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "c862a2f1-6afd-42a2-8a6a-2b784e3d47b9",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1737994010229,
+      "secretData" : "{\"value\":\"UIsL5jMeMbDj8a9PzIHL3YHZxSHw5zj8akD4G4kZQZk=\",\"salt\":\"kac1gFfUZtHelevLFnqWTw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-test-realm" ],
+    "notBefore" : 0,
+    "groups" : [ "/Product_Configurator" ]
+  } ]
+}

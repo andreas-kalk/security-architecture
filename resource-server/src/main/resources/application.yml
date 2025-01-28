@@ -1,4 +1,10 @@
 spring:
+  security:
+    oauth2:
+      resource server:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_URL:http://localhost:8092}/realms/Test-Realm/protocol/openid-connect/certs
+          principal-claim-name: preferred_username
   docker:
     compose:
       enabled: false
@@ -11,3 +17,9 @@ spring:
       uri: mongodb://user:test@localhost:27017
 server:
   port: 8090
+logging:
+  level:
+    org:
+      springframework:
+        security: warn
+    root: info

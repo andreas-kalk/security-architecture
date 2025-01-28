@@ -1,7 +1,21 @@
 spring:
   security:
-    user:
-      password: user
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_URL:http://localhost:8092}/realms/Test-Realm
+        registration:
+          keycloak:
+            provider: keycloak
+            authorization-grant-type: authorization_code
+            client-id: test-client
+            client-secret: vArj4Jasbft9Rmk291Q4LOb0x53P2UmK
+            scope:
+              - openid
+              - profile
+              - email
+              - offline_access
   cloud:
     gateway:
         routes:
@@ -10,6 +24,9 @@ spring:
               predicates:
                 - Path=/api/**
               filters:
+                - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+                - TokenRelay=
+                - SaveSession
                 - StripPrefix=1
   docker:
       compose:
