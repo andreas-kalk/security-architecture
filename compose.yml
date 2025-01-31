@@ -10,6 +10,7 @@ services:
     volumes:
       - keycloak_data:/opt/jboss/keycloak/standalone/data
       - ./keycloak/configuration:/tmp/import
+      - ./keycloak/src/main/resources/themes:/opt/keycloak/themes/custom_v1
     environment:
       TZ: Europe/Berlin
       KC_PROXY_HEADERS: forwarded
