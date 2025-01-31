@@ -46,6 +46,7 @@ services:
     environment:
       RESOURCE_SERVER_URL: ${RESOURCE_SERVER_URL}
       KEYCLOAK_URL: ${KEYCLOAK_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
 
   resource-server:
     build:
@@ -61,6 +62,16 @@ services:
       - keycloak
     environment:
       KEYCLOAK_URL: ${KEYCLOAK_URL}
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    image: security-frontend:${PROJECT_VERSION}
+    container_name: sec-frontend
+    hostname: frontend
+    ports:
+      - 8099:80
 
 volumes:
   mongodb_data:

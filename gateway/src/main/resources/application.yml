@@ -28,6 +28,10 @@ spring:
                 - TokenRelay=
                 - SaveSession
                 - StripPrefix=1
+            - id: frontend
+              uri: ${FRONTEND_URL:http://localhost:8099}
+              predicates:
+                - Path=/**
   docker:
       compose:
           enabled: false
