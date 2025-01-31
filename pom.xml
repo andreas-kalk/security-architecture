@@ -17,5 +17,6 @@
 		<module>gateway</module>
 		<module>resource-server</module>
 		<module>keycloak</module>
+		<module>frontend</module>
 	</modules>
 </project>
